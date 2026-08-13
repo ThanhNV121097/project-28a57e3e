@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"embed"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -15,8 +15,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-//go:embed ../../migrations/*.up.sql
-var migrationFiles embed.FS
+const migrationsDir = "migrations"
 
 func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -82,7 +81,7 @@ func applyMigrations(ctx context.Context, conn *pgx.Conn) error {
 		return err
 	}
 
-	entries, err := migrationFiles.ReadDir("../../migrations")
+	entries, err := os.ReadDir(migrationsDir)
 	if err != nil {
 		return err
 	}
@@ -105,7 +104,7 @@ func applyMigrations(ctx context.Context, conn *pgx.Conn) error {
 			continue
 		}
 
-		sqlBytes, err := migrationFiles.ReadFile(fmt.Sprintf("../../migrations/%s", name))
+		sqlBytes, err := os.ReadFile(filepath.Join(migrationsDir, name))
 		if err != nil {
 			return err
 		}
