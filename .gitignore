@@ -1,0 +1,14 @@
+# Local environment. Do not commit real values.
+.env
+
+# Dependencies and build output.
+node_modules/
+.next/
+dist/
+build/
+coverage/
+
+# IDE and OS files.
+.vscode/
+.idea/
+.DS_Store
