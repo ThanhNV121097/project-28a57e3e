@@ -16,15 +16,8 @@ export function DisplaySavedNotes() {
 
     async function loadNotes() {
       setState("loading");
-
-      if (mode === "error") {
-        await wait();
-        if (active) setState("error");
-        return;
-      }
-
       try {
-        const data = mode === "empty" ? { notes: [], next_cursor: null, has_more: false } : await getSavedNotes();
+        const data = await getSavedNotes(mode);
         if (!active) return;
         setResponse(data);
         setState(data.notes.length ? "loaded" : "empty");
@@ -77,7 +70,7 @@ export function DisplaySavedNotes() {
   );
 }
 
-function NotesList({ notes }: { notes: NonNullable<NotesResponse["notes"]> }) {
+function NotesList({ notes }: { notes: NotesResponse["notes"] }) {
   return (
     <ul className={styles.list} aria-label="Saved notes">
       {notes.map((note) => (
@@ -87,6 +80,11 @@ function NotesList({ notes }: { notes: NonNullable<NotesResponse["notes"]> }) {
             {note.saved_at ? <NoteTime value={note.saved_at} /> : <span className={styles.timeText}>Date unavailable</span>}
           </div>
           <p>{note.body}</p>
+          {note.tags && note.tags.length > 0 && (
+            <div className={styles.tags} aria-label="Note metadata">
+              {note.tags.map((tag) => <span className={styles.tag} key={tag}>{tag}</span>)}
+            </div>
+          )}
         </li>
       ))}
     </ul>
@@ -101,23 +99,37 @@ function NoteTime({ value }: { value: string }) {
 function LoadingState() {
   return (
     <div className={styles.loading} aria-label="Loading saved notes">
-      {[0, 1, 2].map((item) => <div className={styles.skeleton} aria-hidden="true" key={item}><span /><span /><span /></div>)}
+      {[0, 1, 2].map((item) => (
+        <div className={styles.skeletonCard} aria-hidden="true" key={item}>
+          <span className={`${styles.skeletonLine} ${styles.skeletonTitle}`} />
+          <span className={`${styles.skeletonLine} ${styles.skeletonBody}`} />
+          <span className={`${styles.skeletonLine} ${styles.skeletonShort}`} />
+        </div>
+      ))}
     </div>
   );
 }
 
 function EmptyState() {
-  return <div className={styles.empty} role="status"><StateMark /> <h3>No saved notes yet</h3><p>Database returned zero saved notes for this board.</p></div>;
+  return (
+    <div className={styles.empty} role="status">
+      <span className={styles.stateIcon} aria-hidden="true" />
+      <div>
+        <h3>No saved notes yet</h3>
+        <p>The database returned zero saved notes for this read-only board.</p>
+      </div>
+    </div>
+  );
 }
 
 function ErrorState() {
-  return <div className={styles.error} role="alert"><StateMark /> <h3>Notes could not load</h3><p>Something went wrong while fetching saved notes. Refresh page or try again later.</p></div>;
-}
-
-function StateMark() {
-  return <svg aria-hidden="true" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" /><path d="M21 34h22M24 26h16M28 42h8" /></svg>;
-}
-
-function wait() {
-  return new Promise((resolve) => window.setTimeout(resolve, 700));
+  return (
+    <div className={styles.error} role="alert">
+      <span className={styles.stateIcon} aria-hidden="true" />
+      <div>
+        <h3>Notes could not load</h3>
+        <p>Something went wrong while fetching saved notes. Refresh page or try again later.</p>
+      </div>
+    </div>
+  );
 }
