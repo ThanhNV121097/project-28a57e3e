@@ -1,0 +1,6 @@
+# Local frontend dependencies and build output.
+node_modules/
+.next/
+
+# Local environment. Do not commit real values.
+.env.local
