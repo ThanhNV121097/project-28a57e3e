@@ -1,33 +1,7 @@
 .page {
-  --space-0: 0;
-  --space-2: 6px;
-  --space-4: 8px;
-  --space-6: 10px;
-  --space-7: 11px;
-  --space-8: 12px;
-  --space-10: 14px;
-  --space-11: 16px;
-  --space-12: 18px;
-  --space-13: 20px;
-  --space-15: 24px;
-  --space-16: 28px;
-  --space-17: 32px;
-  --space-19: 56px;
-  --text-xs: 12px;
-  --text-sm: 13px;
-  --text-note: 14px;
-  --text-base: 16px;
-  --text-card-title: 17px;
-  --text-lg: clamp(17px, 2vw, 20px);
-  --text-xl: 22px;
-  --text-3xl: 26px;
-  --text-display: clamp(42px, 7vw, 74px);
-  --border-width: 1px;
-  --border-width-illustration: 3px;
-  --easing: ease;
   display: grid;
   gap: var(--space-16);
-  width: min(1120px, calc(100% - 32px));
+  width: min(var(--content-max), calc(100% - var(--page-inset)));
   margin: var(--space-0) auto;
   padding: var(--space-16) var(--space-0) var(--space-19);
   color: var(--color-text);
@@ -44,7 +18,7 @@
 .intro {
   position: relative;
   overflow: hidden;
-  padding: clamp(28px, 5vw, 54px);
+  padding: var(--panel-padding-lg);
 }
 
 .intro::after {
@@ -56,7 +30,7 @@
   height: var(--space-19);
   border-radius: var(--radius-full);
   background: var(--color-success);
-  opacity: .12;
+  opacity: var(--opacity-accent);
 }
 
 .eyebrow,
@@ -66,7 +40,7 @@
   gap: var(--space-2);
   border-radius: var(--radius-full);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .eyebrow {
@@ -81,6 +55,9 @@
   width: var(--space-4);
   height: var(--space-4);
   border-radius: var(--radius-full);
+}
+
+.eyebrow span {
   background: var(--color-success);
 }
 
@@ -92,15 +69,15 @@
 .title {
   margin: var(--space-0);
   font-size: var(--text-display);
-  line-height: .94;
+  line-height: var(--leading-display);
 }
 
 .lede {
-  max-width: 58ch;
+  max-width: var(--measure-lede);
   margin: var(--space-13) var(--space-0) var(--space-0);
   color: var(--color-text-body);
   font-size: var(--text-lg);
-  line-height: 1.65;
+  line-height: var(--leading-loose);
 }
 
 .summary {
@@ -119,19 +96,19 @@
 
 .summary dt {
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .summary dd {
   margin: var(--space-2) var(--space-0) var(--space-0);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .board {
-  min-height: 560px;
-  padding: clamp(20px, 3vw, 28px);
+  min-height: var(--board-min-height);
+  padding: var(--panel-padding-md);
 }
 
 .boardHead,
@@ -155,7 +132,7 @@
   margin: var(--space-4) var(--space-0) var(--space-0);
   color: var(--color-text-muted);
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: var(--leading-base);
 }
 
 .status {
@@ -166,7 +143,7 @@
 }
 
 .viewport {
-  min-height: 360px;
+  min-height: var(--state-min-height);
 }
 
 .list,
@@ -182,7 +159,7 @@
 .skeleton {
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
-  background: linear-gradient(180deg, var(--color-surface), var(--color-surface-raised));
+  background: linear-gradient(var(--gradient-note-direction), var(--color-surface), var(--color-surface-raised));
   padding: var(--space-12);
 }
 
@@ -191,8 +168,8 @@
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+  transform: translateY(var(--lift-card));
+  border-color: color-mix(in srgb, var(--color-primary) var(--mix-card-border), transparent);
   box-shadow: var(--shadow-md);
 }
 
@@ -205,7 +182,7 @@
   margin: var(--space-10) var(--space-0) var(--space-0);
   color: var(--color-text-body);
   font-size: var(--text-base);
-  line-height: 1.55;
+  line-height: var(--leading-note);
 }
 
 .card time,
@@ -224,7 +201,7 @@
   content: "";
   position: absolute;
   inset: var(--space-0);
-  background: linear-gradient(90deg, transparent, var(--color-surface), transparent);
+  background: linear-gradient(var(--gradient-shimmer-direction), transparent, var(--color-surface), transparent);
   animation: shimmer var(--duration-shimmer) var(--easing) infinite;
 }
 
@@ -237,23 +214,23 @@
 }
 
 .skeleton span:first-child {
-  width: 45%;
+  width: var(--skeleton-title-width);
   margin-top: var(--space-0);
 }
 
 .skeleton span:nth-child(2) {
-  width: 86%;
+  width: var(--skeleton-body-width);
 }
 
 .skeleton span:nth-child(3) {
-  width: 62%;
+  width: var(--skeleton-short-width);
 }
 
 .empty,
 .error {
   display: grid;
   place-items: center;
-  min-height: 360px;
+  min-height: var(--state-min-height);
   border: var(--border-width) dashed var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface-raised);
@@ -297,7 +274,7 @@
 .readOnly {
   margin: var(--space-8) var(--space-0) var(--space-0);
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: var(--leading-base);
 }
 
 .empty p {
@@ -314,27 +291,27 @@
 }
 
 @keyframes pulse {
-  50% { opacity: .35; }
+  50% { opacity: var(--opacity-pulse); }
 }
 
 @keyframes shimmer {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100%); }
+  from { transform: translateX(var(--shimmer-start)); }
+  to { transform: translateX(var(--shimmer-end)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .status span,
   .skeleton::after,
   .card {
-    animation-duration: .01ms;
-    animation-iteration-count: 1;
-    transition-duration: .01ms;
+    animation-duration: var(--duration-reduced);
+    animation-iteration-count: var(--iteration-reduced);
+    transition-duration: var(--duration-reduced);
   }
 }
 
 @media (max-width: 560px) {
   .page {
-    width: min(100% - 20px, 1120px);
+    width: min(100% - var(--page-inset-mobile), var(--content-max));
     padding-top: var(--space-6);
   }
 
