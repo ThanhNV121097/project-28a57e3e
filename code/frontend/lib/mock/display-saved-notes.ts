@@ -4,6 +4,7 @@ export type NotesResponse = {
     title: string;
     body: string;
     saved_at: string | null;
+    tags?: string[];
   }>;
   next_cursor: string | null;
   has_more: boolean;
@@ -25,6 +26,7 @@ export const savedNotesResponse: NotesResponse = {
       title: "Release notes",
       body: "Ship read-only notes board with loading, empty, and error states before backend schema work starts.",
       saved_at: "2026-08-12T00:00:00.000Z",
+      tags: ["planning", "release"],
     },
     {
       id: "9c7f89a1-22d8-4b6c-bcb0-6c8123f73db7",
@@ -43,7 +45,9 @@ export const savedNotesResponse: NotesResponse = {
   has_more: false,
 };
 
-export async function getSavedNotes(): Promise<NotesResponse> {
+export async function getSavedNotes(mode: string | null): Promise<NotesResponse> {
   await new Promise((resolve) => window.setTimeout(resolve, 700));
+  if (mode === "error") throw new Error("mock notes failure");
+  if (mode === "empty") return { notes: [], next_cursor: null, has_more: false };
   return savedNotesResponse;
 }
