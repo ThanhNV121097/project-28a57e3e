@@ -1,0 +1,6 @@
+# Local backend environment. Do not commit real values.
+.env
+
+# Go build output.
+vendor/
+*.exe
